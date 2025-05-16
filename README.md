@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# School catering administration system
 
-## Getting Started
+## Introduction
 
-First, run the development server:
+This application was created for my thesis with the aim of simplifying and digitizing the administration of school meal services. It provides a web interface for managing user data, menus, meals and orders.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Technologies used
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- [Next.js](https://nextjs.org/) - Full-stack React framework
+- [Prisma](https://www.prisma.io/) - ORM for database access
+- [Auth.js](https://authjs.dev/) - Authentication
+- [Zod](https://zod.dev/) - Type-safe data validation
+- [TailwindCSS](https://tailwindcss.com/) - Styling
+- [PostgreSQL](https://www.postgresql.org/) - Relational database
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+To run this application locally, follow these steps:
 
-## Learn More
+### Install dependencies
 
-To learn more about Next.js, take a look at the following resources:
+> pnpm install
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Generate prisma client
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+> pnpx prisma generate
 
-## Deploy on Vercel
+### Run initial database migration
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+> pnpx prisma migrate dev --name init
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Start development server
+
+> pnpm dev
+
+## License
+
+This project was developed for educational purposes as part of a university thesis. It is not intended for production use and not licensed for commercial deployment
