@@ -1,0 +1,118 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  role Role
+  username String @unique
+  password String
+  isEnabled Boolean @default(true)
+  firstName String
+  lastName String
+  parentDetails ParentDetails?
+  parents StudentParentRelations[]
+  orders Order[]
+  studentAllergies StudentAllergies[]
+}
+
+model StudentAllergies {
+  @@id([studentId, allergyId])
+  student User @relation(fields: [studentId], references: [id])
+  studentId Int
+  allergy Allergy @relation(fields: [allergyId], references: [id])
+  allergyId Int
+}
+
+model ParentDetails {
+  id Int @id @default(autoincrement())
+  userId Int @unique
+  emailAddress String @unique
+  billingAddress String
+  students StudentParentRelations[]
+  parent User @relation(fields: [userId], references: [id])
+}
+
+model StudentParentRelations {
+  @@id([studentId, parentDetailsId])
+  student User @relation(fields: [studentId], references: [id])
+  studentId Int
+  parentDetails ParentDetails @relation(fields: [parentDetailsId], references: [id])
+  parentDetailsId Int
+}
+
+model Allergy {
+  id Int @id @default(autoincrement())
+  allergyDetails String
+  allergenDetails String
+  studentAllergies StudentAllergies[]
+  allergensInMeal AllergensInMeal[]
+}
+
+model Menu {
+  id Int @id @default(autoincrement())
+  startDate DateTime @db.Date @unique
+  endDate DateTime @db.Date @unique
+  activationDate DateTime @db.Date
+  meals Meal[]
+}
+
+model Meal {
+  id Int @id @default(autoincrement())
+  code String @db.Char(1)
+  description String
+  dateOfMeal DateTime @db.Date
+  menuId Int
+  menu Menu @relation(fields: [menuId], references: [id])
+  studentOrders StudentOrders[]
+  allergensInMeal AllergensInMeal[]
+
+  @@unique([code, dateOfMeal])
+}
+
+model AllergensInMeal {
+  @@id([ allergenId, mealId])
+  allergen Allergy @relation(fields: [allergenId], references: [id])
+  allergenId Int
+  meal Meal @relation(fields: [mealId], references: [id])
+  mealId Int
+}
+
+model Order {
+  id Int @id @default(autoincrement())
+  startDate DateTime @db.Date
+  endDate DateTime @db.Date
+  student User @relation(fields: [studentId], references: [id])
+  studentId Int
+  studentOrders StudentOrders[]
+
+  @@unique([studentId, startDate, endDate])
+}
+
+model StudentOrders {
+  @@id([mealId, orderId])
+  meal Meal @relation(fields: [mealId], references: [id])
+  mealId Int
+  order Order @relation(fields: [orderId], references: [id])
+  orderId Int
+}
+
+enum Role {
+  ADMIN
+  PARENT
+  STUDENT
+  KITCHEN_WORKER
+}
